@@ -23,13 +23,11 @@ public class GameManagerScript : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        gameLost = false;
         uiManager = GetComponent<UiManager>();
         scoreManager = GetComponent<ScoreManager>();
         Screen.orientation = ScreenOrientation.Landscape;
         Screen.SetResolution((int)Screen.width, (int)Screen.height, true);
         countdownTimer = GetComponent<CountdownTimer>();
-        gameReady = false;
         sceneController = new SceneController();
         spherePhysics.toggleGravity();
 
@@ -43,6 +41,9 @@ public class GameManagerScript : MonoBehaviour {
             PlayerPrefs.SetInt("sound", 1);
         }
 
+        gameLost = false;
+        gameReady = true;
+        gameStarted = false;
 
     }
 
@@ -52,11 +53,12 @@ public class GameManagerScript : MonoBehaviour {
         {
             PlayerPersistence.SetHighScore(0);
         }
-        //Change this so not calling every frame
-        if (spherePhysics.getBallDrops() == 0)
+        //Checks which colour the cross needs to be
+        if (spherePhysics.getBallDrops() == 0 && uiManager.getCrossColour() == 0)
         {
             uiManager.ChangeCrossColour(1);
-        } else
+        }
+        else if (spherePhysics.getBallDrops() > 0 && uiManager.getCrossColour() == 1)
         {
             uiManager.ChangeCrossColour(0);
         }
@@ -66,10 +68,6 @@ public class GameManagerScript : MonoBehaviour {
             togglePause();
         }
 
-        if (!gameReady)
-        {
-            gameStarted = false;
-        }
 
         if (gameLost)
         {
@@ -83,59 +81,44 @@ public class GameManagerScript : MonoBehaviour {
     public void quitGame()
     {
         gameStarted = false;
-        unpauseGame();
-        returnToMain();
+
         restartGame();
     }
 
-    public void returnToMain()
-    {
-        //StartCoroutine(waitForAnimationMenu());
-    }
 
-    public void pauseGame()
-    {
-        paused = true;
-    }
-
+    /// <summary>
+    /// Resets everything in the game for another run
+    /// </summary>
     public void restartGame()
     {   
-        spherePhysics.returnToCannon();
+        spherePhysics.returnToStartPosition();
+        spherePhysics.disableGravity();
         scoreManager.resetScore();
         gameLost = false;
         countdownTimer.refresh();
-        spherePhysics.toggleGravity();
         playerControl.resetLocation();
         uiManager.CloseGameLostPanel();
+        gameStarted = false;
         gameReady = true;
     }
 
-
-    public void quitToMain()
-    {
-        Debug.Log("Quit game");
-    }
-
-    public void unpauseGame()
-    {
-        paused = false;
-    }
-
+    /// <returns>True if the game is paused</returns>
     public bool getPausedState()
     {
         return paused;
     }
 
-    public float getMaxDrops()
-    {
-        return maxNumberOfDrops;
-    }
-
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>True if the game has been lost</returns>
     public bool getGameLostState()
     {
         return gameLost;
     }
-
+    /// <summary>
+    /// Sets the variables for when the game has been lost
+    /// </summary>
     public void lostGame()
     {
         gameReady = false;
@@ -143,20 +126,18 @@ public class GameManagerScript : MonoBehaviour {
         gameLost = true;
     }
 
+    /// <summary>
+    /// Begins the game
+    /// </summary>
     public void startGame()
     {
-        spherePhysics.toggleGravity();
         gameStarted = true;
+        spherePhysics.enableGravity();
     }
 
     public bool getGameState()
     {
         return gameStarted;
-    }
-
-    private void setGameReady(bool state)
-    {
-        gameReady = state;
     }
 
     public bool getGameReadyState()
@@ -171,12 +152,5 @@ public class GameManagerScript : MonoBehaviour {
             uiManager.togglePause();
             paused = !paused;
         }
-    }
-
-    public void loadGame()
-    {
-        restartGame();
-        gameLost = false;
-        //StartCoroutine(waitForAnimationGame());
     }
 }

@@ -23,11 +23,9 @@ public class HoopCheck : MonoBehaviour {
 
     private void OnTriggerEnter(Collider hoopTrigger)
     {
-        Debug.Log("Trigger hit");
         ColliderControl ballCollider = hoopTrigger.gameObject.GetComponent<ColliderControl>();
         if (ballCollider)
         {
-            Debug.Log("Recognised ball collider");
             // Ensures points are only given if the ball goes through the top of the hoop
             if (spherePhysics.getMovementDirection().y > 0)
             {

@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class SpherePhysics : MonoBehaviour {
@@ -26,8 +27,8 @@ public class SpherePhysics : MonoBehaviour {
     private bool cooldown = false;
     private MeshRenderer renderer;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         renderer = GetComponent<MeshRenderer>();
         trail = GetComponent<TrailRenderer>();
         audioSource = GetComponent<AudioSource>();
@@ -45,27 +46,21 @@ public class SpherePhysics : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            renderer.material.shader = Shader.Find("_Color");
-            renderer.material.SetColor("_Color", Color.green);
-
-            //Find the Specular shader and change its Color to red
-            renderer.material.shader = Shader.Find("Specular");
-            renderer.material.SetColor("_SpecColor", Color.red);
-        }
         if (gameManagerScript.getGameLostState())
         {
             gameObject.SetActive(false);
         }
+
         if (gravityEnabled)
         {
             gravity.force = new Vector3(0, gravityForce, 0);
-        } else
+        }
+        else
         {
             gravity.force = Vector3.zero;
         }
         lastPosition = transform.position;
+        
 
         //if (gameManagerScript.getGameState())
         //{
@@ -132,6 +127,8 @@ public class SpherePhysics : MonoBehaviour {
 
     }
 
+    
+
     public void SetTouchedRim(bool touched)
     {
         touchedRim = touched;
@@ -147,7 +144,7 @@ public class SpherePhysics : MonoBehaviour {
         ballDrops--;
     }
 
-    public void returnToCannon()
+    public void returnToStartPosition()
     {
         cooldown = false;
         gameObject.SetActive(true);
@@ -164,6 +161,18 @@ public class SpherePhysics : MonoBehaviour {
     public void toggleGravity()
     {
         gravityEnabled = !gravityEnabled;
+    }
+
+    public void disableGravity()
+    {
+        gravityEnabled = false;
+
+    }
+
+    public void enableGravity()
+    {
+        gravityEnabled = true;
+
     }
 
     public void centreBall()

@@ -28,6 +28,8 @@ public class UiManager : MonoBehaviour
     //Main menu buttons
     public Button startGameButton;
 
+    private int currentColour;
+
     const string HighScoreMessage = "New High Score!";
     // Start is called before the first frame update
     void Start()
@@ -41,7 +43,7 @@ public class UiManager : MonoBehaviour
             toggleSound();
         });
         resume.onClick.AddListener(unpause);
-        retry.onClick.AddListener(restart);
+        retry.onClick.AddListener(retryGame);
         pauseButton.onClick.AddListener(togglePause);
         restartButton.onClick.AddListener(restart);
         returnToMenu.onClick.AddListener(returnToMain);
@@ -65,11 +67,19 @@ public class UiManager : MonoBehaviour
         Image crossImage = cross.GetComponent<Image>();
         if (colour == 1)
         {
+            currentColour = 1;
             crossImage.color = Color.red;
-        } else if (colour == 0)
+        }
+        else if (colour == 0)
         {
+            currentColour = 0;
             crossImage.color = Color.gray;
         }
+    }
+
+    public int getCrossColour()
+    {
+        return currentColour;
     }
 
     public void returnToMain()
@@ -101,7 +111,13 @@ public class UiManager : MonoBehaviour
         }
     }
 
-    private void unpause()
+    public void retryGame()
+    {
+        gameManager.restartGame();
+        CloseGameLostPanel();
+    }
+
+    public void unpause()
     {
         Time.timeScale = 1;
         pauseMenu.gameObject.SetActive(false);
@@ -121,6 +137,7 @@ public class UiManager : MonoBehaviour
     private void restart()
     {
         gameManager.restartGame();
+        unpause();
     }
 
     private void pause()
