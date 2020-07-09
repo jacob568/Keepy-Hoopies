@@ -31,6 +31,7 @@ public class GameManagerScript : MonoBehaviour {
         countdownTimer = GetComponent<CountdownTimer>();
         gameReady = false;
         sceneController = new SceneController();
+        spherePhysics.toggleGravity();
 
         if (!PlayerPrefs.HasKey("music"))
         {
@@ -47,6 +48,10 @@ public class GameManagerScript : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            PlayerPersistence.SetHighScore(0);
+        }
         //Change this so not calling every frame
         if (spherePhysics.getBallDrops() == 0)
         {
@@ -70,25 +75,9 @@ public class GameManagerScript : MonoBehaviour {
         {
             float score = scoreManager.getScore();
             float currentHighScore = PlayerPersistence.GetHighScore();
-            if (score > currentHighScore)
-            {
-                PlayerPersistence.SetHighScore(score);
-                scoreManager.updateHighScore();
-                uiManager.newHighScore(score);
-            }
-            uiManager.displayFinalScore(score);
+            //This needs to go before for the new high score to appear correctly
+            scoreManager.gameOverScoreManagement();
         }
-
-        //if (paused)
-        //{
-        //    Time.timeScale = 0;
-        //    pauseMenu.gameObject.SetActive(true);
-        //}
-        //else
-        //{
-        //    Time.timeScale = 1;
-        //    pauseMenu.gameObject.SetActive(false);
-        //}
     }
 
     public void quitGame()
@@ -111,11 +100,13 @@ public class GameManagerScript : MonoBehaviour {
 
     public void restartGame()
     {   
-        //spherePhysics.returnToCannon();
+        spherePhysics.returnToCannon();
         scoreManager.resetScore();
         gameLost = false;
         countdownTimer.refresh();
+        spherePhysics.toggleGravity();
         playerControl.resetLocation();
+        uiManager.CloseGameLostPanel();
         gameReady = true;
     }
 
@@ -154,6 +145,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public void startGame()
     {
+        spherePhysics.toggleGravity();
         gameStarted = true;
     }
 
@@ -187,18 +179,4 @@ public class GameManagerScript : MonoBehaviour {
         gameLost = false;
         //StartCoroutine(waitForAnimationGame());
     }
-
-    //private IEnumerator waitForAnimationGame()
-    //{
-    //    yield return new WaitForSeconds(2f);
-    //    controlCanvas.SetActive(true);
-    //    setGameReady(true);
-    //}
-
-    //private IEnumerator waitForAnimationMenu()
-    //{
-    //    controlCanvas.SetActive(false);
-    //    yield return new WaitForSeconds(2f);
-    //    setGameReady(false);
-    //}
 }

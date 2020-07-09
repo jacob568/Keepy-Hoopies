@@ -4,19 +4,21 @@ using TMPro;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour {
-    private float score, highScore;
+    private float score, highScore, previousHighScore;
     private UiManager uiManager;
 
 	// Use this for initialization
 	void Start () {
         uiManager = GetComponent<UiManager>();
         highScore = PlayerPersistence.GetHighScore();
+        uiManager.updateHighScoreText(highScore);
+        previousHighScore = 1.5f;
         score = 0f;
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        uiManager.updateScoreText(score, highScore);
+        uiManager.updateScoreText(score);
 	}
 
     public void addToScore(float toAdd)
@@ -34,8 +36,17 @@ public class ScoreManager : MonoBehaviour {
         return score;
     }
 
-    public void updateHighScore()
+    public void gameOverScoreManagement()
     {
-        highScore = PlayerPersistence.GetHighScore();
+        bool isHighScore = false;
+        Debug.Log(score + " " + highScore);
+        if (score > highScore)
+        {
+            isHighScore = true;
+            PlayerPersistence.SetHighScore(score);
+        }
+        uiManager.OpenGameLostPanel();
+        uiManager.displayFinalScore(score, isHighScore);
     }
+
 }

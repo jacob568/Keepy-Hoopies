@@ -6,12 +6,13 @@ using TMPro;
 public class CountdownTimer : MonoBehaviour {
 
     public TextMeshProUGUI countdownText;
-    public GameManagerScript gameManager;
+    private GameManagerScript gameManager;
     private bool countdownRunning;
     private IEnumerator co;
 
 	// Use this for initialization
 	void Start () {
+        gameManager = GetComponent<GameManagerScript>();
         co = countdown();
         countdownRunning = false;
         countdownText.text = "Ready?";

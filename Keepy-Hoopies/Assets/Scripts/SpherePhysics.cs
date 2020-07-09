@@ -40,7 +40,7 @@ public class SpherePhysics : MonoBehaviour {
         scoreManager = gameManager.GetComponent<ScoreManager>();
         sphere = GetComponent<Rigidbody>();
         touchedRim = false;
-        centreLocation = new Vector3(0, 90f, 0);
+        centreLocation = new Vector3(0, 10f, 0);
 	}
 	
 	// Update is called once per frame
@@ -67,10 +67,10 @@ public class SpherePhysics : MonoBehaviour {
         }
         lastPosition = transform.position;
 
-        if (gameManagerScript.getGameState())
-        {
-            ballTrackerActive = gameManagerScript.getGameState();
-        }
+        //if (gameManagerScript.getGameState())
+        //{
+        //    ballTrackerActive = gameManagerScript.getGameState();
+        //}
 
         if (ballTrackerActive)
         {
@@ -82,7 +82,7 @@ public class SpherePhysics : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            transform.position = new Vector3(-80.4f, 205.4f, 48.1f);
+            transform.position = new Vector3(-7.6f, 10.0f, 6.6f);
             sphere.velocity = Vector3.zero;
         }
 
@@ -151,7 +151,7 @@ public class SpherePhysics : MonoBehaviour {
     {
         cooldown = false;
         gameObject.SetActive(true);
-        transform.position = new Vector3(-7.6f, 50.5f, 56.5f);
+        transform.position = new Vector3(0f, 10f, 0f);
         sphere.velocity = new Vector3(0f, 0f, 0f);
         ballDrops = 1;
     }

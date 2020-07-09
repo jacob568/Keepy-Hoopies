@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour {
     private Vector3 touchOrigin = -Vector3.one;
-    private float movementSpeed = 10f;
+    private float movementSpeed = 4f;
     private Rigidbody playerRigidbody;
     public float jumpForce;
     private bool isJumping;
@@ -48,7 +48,7 @@ public class PlayerControl : MonoBehaviour {
     // Update is called once per frame
     void Update ()
     {
-        int layerMask = 1 << 9;
+        LayerMask layerMask = LayerMask.GetMask("Wall");
         previousLocation = transform.position;
         Vector3 moveDirection = Vector3.zero;
         /**
@@ -91,9 +91,9 @@ public class PlayerControl : MonoBehaviour {
             Vector3 rightPosition = Quaternion.AngleAxis(30, Vector3.up) * directionNormalized;
 
             //COllision detection
-            if (!Physics.Raycast(transform.position, leftJoystickInput, 14f, layerMask)
-                && !Physics.Raycast(transform.position, leftPosition, 14f, layerMask)
-                && !Physics.Raycast(transform.position, rightPosition, 14f, layerMask))
+            if (!Physics.Raycast(transform.position, leftJoystickInput, 1.3f, layerMask)
+                && !Physics.Raycast(transform.position, leftPosition, 1.3f, layerMask)
+                && !Physics.Raycast(transform.position, rightPosition, 1.3f, layerMask))
             {
                 transform.Translate(directionNormalized * magnitude * movementSpeed * Time.deltaTime, Space.World);
             }
@@ -128,6 +128,6 @@ public class PlayerControl : MonoBehaviour {
     // moves player to the central position
     public void resetLocation()
     {
-        transform.position = new Vector3(-3f, 8f, 8.1f);
+        transform.position = new Vector3(0f, 1.7f, 0f);
     }
 }

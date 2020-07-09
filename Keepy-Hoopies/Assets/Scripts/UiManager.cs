@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UiManager : MonoBehaviour
@@ -43,7 +44,7 @@ public class UiManager : MonoBehaviour
         retry.onClick.AddListener(restart);
         pauseButton.onClick.AddListener(togglePause);
         restartButton.onClick.AddListener(restart);
-        //returnToMenu.onClick.AddListener(returnToMain);
+        returnToMenu.onClick.AddListener(returnToMain);
         //quit.onClick.AddListener(quitGame);
         //startGameButton.onClick.AddListener(loadGame);
 
@@ -70,6 +71,12 @@ public class UiManager : MonoBehaviour
             crossImage.color = Color.gray;
         }
     }
+
+    public void returnToMain()
+    {
+        SceneManager.LoadScene("TitleScene");
+    }
+
     public void toggleMusic()
     {
         if (musicToggle.isOn)
@@ -123,12 +130,6 @@ public class UiManager : MonoBehaviour
         
     }
 
-    public void newHighScore(float score)
-    {
-        highScoreAchieved.text = HighScoreMessage;
-        scoreText.text = "Score: " + score;
-    }
-
     public void OpenGameLostPanel()
     {
         gameLostPanel.gameObject.SetActive(true);
@@ -136,17 +137,29 @@ public class UiManager : MonoBehaviour
 
     public void CloseGameLostPanel()
     {
-        gameLostPanel.gameObject.SetActive(true);
+        gameLostPanel.gameObject.SetActive(false);
     }
 
-    public void displayFinalScore(float score)
+    public void displayFinalScore(float score, bool displayHighScoreText)
     {
-        scoreText.text = "Score: " + score;
+        gameOverScoreText.text = "Final Score: " + score;
+        if (displayHighScoreText)
+        {
+            highScoreAchieved.text = HighScoreMessage;
+        } else
+        {
+            highScoreAchieved.text = "";
+        }
+        //scoreText.text = "Score: " + score;
     }
 
-    public void updateScoreText(float score, float highScore)
+    public void updateScoreText(float score)
     {
         scoreText.text = "Score: " + score.ToString();
+    }
+
+    public void updateHighScoreText(float highScore)
+    {
         highScoreText.text = "High score: " + highScore.ToString();
     }
 }

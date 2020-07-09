@@ -10,12 +10,12 @@ public class PlayerShadow : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        yPosition = 0f;
+        yPosition = 0.2f;
 
     }
 
     // Update is called once per frame.
-    void Update()
+    void FixedUpdate()
     {
         newPosition = new Vector3(player.transform.position.x, yPosition, player.transform.position.z);
 
