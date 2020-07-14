@@ -125,12 +125,15 @@ public class UiManager : MonoBehaviour
 
     public void togglePause()
     {
-        if (gameObject.activeSelf)
+        if (!gameManager.getGameLostState())
         {
-            pause();
-        } else
-        {
-            unpause();
+            if (gameObject.activeSelf)
+            {
+                pause();
+            } else
+            {
+                unpause();
+            }
         }
     }
 

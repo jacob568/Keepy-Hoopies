@@ -15,7 +15,7 @@ public class PlayerShadow : MonoBehaviour {
     }
 
     // Update is called once per frame.
-    void FixedUpdate()
+    void Update()
     {
         newPosition = new Vector3(player.transform.position.x, yPosition, player.transform.position.z);
 

@@ -30,11 +30,10 @@ public class PlayerControl : MonoBehaviour {
     private Vector3 leftJoystickInput; // holds the input of the Left Joystick
     float xMovementLeftJoystick; // The horizontal movement from joystick 01
     float zMovementLeftJoystick; // The vertical movement from joystick 01
-    Vector3 centreJoystick;
+    public Transform centreJoystick;
 
     // Use this for initialization
     void Start () {
-        centreJoystick = joystickHandle.position;
         newLocation = transform.position;
         previousLocation = Vector3.zero;
         audioSource = GetComponent<AudioSource>();
@@ -65,14 +64,15 @@ public class PlayerControl : MonoBehaviour {
         {
             jump();
         }       **/
-//#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        //#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+
         leftJoystickInput = leftJoystick.GetInputDirection();
         moveDirection = new Vector3(leftJoystickInput.x, 0f, leftJoystickInput.y);
         xMovementLeftJoystick = leftJoystickInput.x; // The horizontal movement from joystick 01
         zMovementLeftJoystick = leftJoystickInput.y; // The vertical movement from joystick 01	
 
-        direction = (joystickHandle.position - centreJoystick);
-        magnitude = direction.magnitude / 10f;
+        direction = (joystickHandle.localPosition - centreJoystick.localPosition);
+        magnitude = direction.magnitude / 8f;
         directionNormalized = direction.normalized;
         directionNormalized.z = directionNormalized.y;
         directionNormalized.y = 0f;
@@ -90,7 +90,8 @@ public class PlayerControl : MonoBehaviour {
             Vector3 leftPosition = Quaternion.AngleAxis(-30, Vector3.up) * directionNormalized;
             Vector3 rightPosition = Quaternion.AngleAxis(30, Vector3.up) * directionNormalized;
 
-            //COllision detection
+            //COllision detection. Prevents walking through walls/planes, which is possible with
+            //BoxColliders
             if (!Physics.Raycast(transform.position, leftJoystickInput, 1.3f, layerMask)
                 && !Physics.Raycast(transform.position, leftPosition, 1.3f, layerMask)
                 && !Physics.Raycast(transform.position, rightPosition, 1.3f, layerMask))

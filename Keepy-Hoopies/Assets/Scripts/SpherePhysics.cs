@@ -23,14 +23,12 @@ public class SpherePhysics : MonoBehaviour {
     private AudioClip ballHitSound;
     public AudioClip scorePoint;
     private Vector3 centreLocation;
-    private TrailRenderer trail;
-    private bool cooldown = false;
-    private MeshRenderer renderer;
+
+    private bool allowPoint;
 
     // Use this for initialization
     void Start () {
-        renderer = GetComponent<MeshRenderer>();
-        trail = GetComponent<TrailRenderer>();
+        allowPoint = true;
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
         //trail = GetComponent<TrailRenderer>();
@@ -75,12 +73,15 @@ public class SpherePhysics : MonoBehaviour {
             ballTracker.SetActive(false);
         }
 
+
+        //Testing
         if (Input.GetKeyDown(KeyCode.S))
         {
             transform.position = new Vector3(-7.6f, 10.0f, 6.6f);
             sphere.velocity = Vector3.zero;
         }
 
+        //Testing
         if (Input.GetKeyDown(KeyCode.D))
         {
             transform.position = new Vector3(-93.4f, 75.4f, 48.1f);
@@ -92,11 +93,11 @@ public class SpherePhysics : MonoBehaviour {
     private void OnCollisionEnter(Collision collision)
     {
         PlayerControl player = collision.gameObject.GetComponent<PlayerControl>();
-
-        
-        if (player && !cooldown)
+        //If the ball collides with player
+        if (player)
         {
-            if (scoreManager)
+            //And if the ball has reached the height required to get another point
+            if (scoreManager && allowPoint)
             {
                 if (PlayerPersistence.GetSoundStatus() == 1)
                 {
@@ -105,11 +106,12 @@ public class SpherePhysics : MonoBehaviour {
                 }
 
                 scoreManager.addToScore(1);
-
-                StartCoroutine(collisionCooldown());
-                cooldown = true;
-
+                allowPoint = false;
             }
+
+            //This resets every time the player hits the ball.
+            //It might be possible to get a rimless dunk, if the ball bounces off
+            //one hoop, and into another.
             if (touchedRim)
             {
                 touchedRim = false;
@@ -127,48 +129,72 @@ public class SpherePhysics : MonoBehaviour {
 
     }
 
-    
 
-    public void SetTouchedRim(bool touched)
+    public void changeAllowPoint(bool value)
     {
-        touchedRim = touched;
+        allowPoint = value;
     }
 
+    /// <summary>
+    /// Sets the value of the touched rim bool
+    /// </summary>
+    /// <param name="value">Value to set</param>
+    public void SetTouchedRim(bool value)
+    {
+        touchedRim = value;
+    }
+
+    /// <returns>bool indicating if the ball has hit the rim of a hoop</returns>
     public bool getTouchedRim()
     {
         return touchedRim;
     }
 
+    /// <summary>
+    /// Registers a ball drop
+    /// </summary>
     public void ballDropped()
     {
         ballDrops--;
     }
 
+    /// <summary>
+    /// Returns the ball to its starting position in the arena
+    /// </summary>
     public void returnToStartPosition()
     {
-        cooldown = false;
         gameObject.SetActive(true);
         transform.position = new Vector3(0f, 10f, 0f);
         sphere.velocity = new Vector3(0f, 0f, 0f);
         ballDrops = 1;
     }
 
+
+    /// <returns>The number of drops allowed before losing</returns>
     public float getBallDrops()
     {
         return ballDrops;
     }
 
+    /// <summary>
+    /// Toggles gravity for objects of this class
+    /// </summary>
     public void toggleGravity()
     {
         gravityEnabled = !gravityEnabled;
     }
 
+    /// <summary>
+    /// Disables gravity for objects of this class.
+    /// </summary>
     public void disableGravity()
     {
         gravityEnabled = false;
 
     }
-
+    /// <summary>
+    /// Enables gravity for objects of this class.
+    /// </summary>
     public void enableGravity()
     {
         gravityEnabled = true;
@@ -177,7 +203,7 @@ public class SpherePhysics : MonoBehaviour {
 
     public void centreBall()
     {
-        trail.emitting = false;
+        //trail.emitting = false;
         transform.position = centreLocation;
         sphere.velocity = Vector3.zero;
         toggleGravity();
@@ -191,16 +217,10 @@ public class SpherePhysics : MonoBehaviour {
         return direction;
     }
 
-    IEnumerator collisionCooldown()
-    {
-        yield return new WaitForSeconds(.3f);
-        cooldown = false;
-    }
-
     IEnumerator gravityTimer()
     {
         yield return new WaitForSeconds(1f);
-        trail.emitting = true;
+        //trail.emitting = true;
         toggleGravity();
     }
 }
