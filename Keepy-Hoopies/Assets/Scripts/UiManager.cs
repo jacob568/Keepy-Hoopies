@@ -18,8 +18,10 @@ public class UiManager : MonoBehaviour
 
     public TextMeshProUGUI highScoreAchieved;
     public TextMeshProUGUI gameOverScoreText;
-    public TextMeshProUGUI scoreText;
-    public TextMeshProUGUI highScoreText;
+    //public TextMeshProUGUI scoreText;
+    public TextMeshPro scoreText;
+    //public TextMeshProUGUI highScoreText;
+    public TextMeshPro highScoreText;
 
     //Pause buttons
     public Button resume, quit, pauseButton, restartButton;
@@ -180,6 +182,6 @@ public class UiManager : MonoBehaviour
 
     public void updateHighScoreText(float highScore)
     {
-        highScoreText.text = "High score: " + highScore.ToString();
+        highScoreText.text = "Best: " + highScore.ToString();
     }
 }

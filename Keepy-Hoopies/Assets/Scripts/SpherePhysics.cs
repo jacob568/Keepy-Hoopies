@@ -18,6 +18,7 @@ public class SpherePhysics : MonoBehaviour {
     public float gravityForce;
 
     private bool ballTrackerActive;
+    private TrailRenderer trail;
 
     private AudioSource audioSource;
     private AudioClip ballHitSound;
@@ -31,7 +32,9 @@ public class SpherePhysics : MonoBehaviour {
         allowPoint = true;
         audioSource = GetComponent<AudioSource>();
         audioSource.playOnAwake = false;
-        //trail = GetComponent<TrailRenderer>();
+        trail = GetComponent<TrailRenderer>();
+        trail.emitting = true;
+        
         gravity = gameObject.AddComponent<ConstantForce>();
         gravity.force = new Vector3(0, gravityForce, 0);
         ballTrackerActive = true;
@@ -203,7 +206,7 @@ public class SpherePhysics : MonoBehaviour {
 
     public void centreBall()
     {
-        //trail.emitting = false;
+        trail.enabled = false;
         transform.position = centreLocation;
         sphere.velocity = Vector3.zero;
         toggleGravity();
@@ -220,7 +223,7 @@ public class SpherePhysics : MonoBehaviour {
     IEnumerator gravityTimer()
     {
         yield return new WaitForSeconds(1f);
-        //trail.emitting = true;
+        trail.enabled = true;
         toggleGravity();
     }
 }

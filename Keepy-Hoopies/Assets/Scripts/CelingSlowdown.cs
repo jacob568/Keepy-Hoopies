@@ -20,8 +20,7 @@ public class CelingSlowdown : MonoBehaviour {
         Vector3 newVelocity = rigidbody.velocity;
         if (rigidbody.velocity.y > 0)
         {
-            Debug.Log("APPLYING FORCE AAAAAA");
-            newVelocity.y -= .05f;
+            newVelocity.y -= .1f;
             rigidbody.velocity = newVelocity;
         }
     }
