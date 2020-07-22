@@ -7,12 +7,14 @@ using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
-    public Button playButton;
+    public Button playButton, leaderboardButton, achievementsButton;
     public TextMeshProUGUI scoreText;
     // Start is called before the first frame update
     void Start()
     {
         playButton.onClick.AddListener(StartGame);
+        achievementsButton.onClick.AddListener(OpenAchievementsPanel);
+        leaderboardButton.onClick.AddListener(OpenLeaderboardPanel);
         scoreText.text = PlayerPersistence.GetHighScore().ToString();
     }
 
@@ -25,5 +27,15 @@ public class TitleManager : MonoBehaviour
     private void StartGame()
     {
         SceneManager.LoadScene("GameScene");
+    }
+
+    private void OpenAchievementsPanel()
+    {
+        Social.ShowAchievementsUI();
+    }
+
+    private void OpenLeaderboardPanel()
+    {
+        Social.ShowLeaderboardUI();
     }
 }
