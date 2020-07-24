@@ -24,7 +24,17 @@
 
 public static class GPGSIds
 {
+        public const string leaderboard_high_score = "CgkIgqrZqcQHEAIQAw"; // <GPGSID>
+        public const string achievement_now_thats_a_good_score = "CgkIgqrZqcQHEAIQCw"; // <GPGSID>
+        public const string achievement_beginner = "CgkIgqrZqcQHEAIQBA"; // <GPGSID>
+        public const string achievement_double_hooper = "CgkIgqrZqcQHEAIQBg"; // <GPGSID>
+        public const string achievement_hoop = "CgkIgqrZqcQHEAIQAg"; // <GPGSID>
+        public const string achievement_hey_thats_pretty_good = "CgkIgqrZqcQHEAIQCg"; // <GPGSID>
+        public const string achievement_getting_better = "CgkIgqrZqcQHEAIQBQ"; // <GPGSID>
+        public const string achievement_double_swisher = "CgkIgqrZqcQHEAIQBw"; // <GPGSID>
         public const string achievement_swish = "CgkIgqrZqcQHEAIQAQ"; // <GPGSID>
+        public const string leaderboard_most_hoops_in_a_game = "CgkIgqrZqcQHEAIQCA"; // <GPGSID>
+        public const string leaderboard_most_swishes_in_a_game = "CgkIgqrZqcQHEAIQCQ"; // <GPGSID>
 
 }
 

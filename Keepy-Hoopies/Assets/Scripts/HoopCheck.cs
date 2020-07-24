@@ -39,7 +39,7 @@ public class HoopCheck : MonoBehaviour {
                         audioSource.clip = swishSound;
                         audioSource.Play();
                     }
-                    scoreManager.addToScore(20);
+                    scoreManager.scoreSwish();
                     wait(.5f);
                 }
                 // if hoop was touched
@@ -51,7 +51,7 @@ public class HoopCheck : MonoBehaviour {
                         audioSource.clip = nonSwishSound;
                         audioSource.Play();
                     }
-                    scoreManager.addToScore(10);
+                    scoreManager.scoreHoop();
                     spherePhysics.SetTouchedRim(false);
                     wait(.5f);
                 }

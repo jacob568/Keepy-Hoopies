@@ -50,13 +50,23 @@ public static class PlayerPersistence {
         return PlayerPrefs.GetFloat("highScore");
     }
 
-    public static int GetCoinCount()
+    public static void SetSwishHighScore(float value)
     {
-        return PlayerPrefs.GetInt("coins");
+        PlayerPrefs.SetFloat("SwishHighScore", value);
     }
 
-    public static void SetCoinCount(int coins)
+    public static void SetHoopHighScore(float value)
     {
-        PlayerPrefs.SetInt("coins", coins);
+        PlayerPrefs.SetFloat("HoopHighScore", value);
+    }
+
+    public static float GetSwishHighScore()
+    {
+        return PlayerPrefs.GetFloat("SwishHighScore");
+    }
+
+    public static float GetHoopHighScore()
+    {
+        return PlayerPrefs.GetFloat("HoopHighScore");
     }
 }

@@ -67,15 +67,6 @@ public class GameManagerScript : MonoBehaviour {
         {
             togglePause();
         }
-
-
-        if (gameLost)
-        {
-            float score = scoreManager.getScore();
-            float currentHighScore = PlayerPersistence.GetHighScore();
-            //This needs to go before for the new high score to appear correctly
-            scoreManager.gameOverScoreManagement();
-        }
     }
 
     public void quitGame()
@@ -124,6 +115,7 @@ public class GameManagerScript : MonoBehaviour {
         gameReady = false;
         gameStarted = false;
         gameLost = true;
+        scoreManager.gameOverScoreManagement();
     }
 
     /// <summary>

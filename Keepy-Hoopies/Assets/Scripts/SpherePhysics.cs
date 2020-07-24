@@ -55,18 +55,15 @@ public class SpherePhysics : MonoBehaviour {
         if (gravityEnabled)
         {
             gravity.force = new Vector3(0, gravityForce, 0);
+            sphere.isKinematic = false;
         }
         else
         {
+            sphere.isKinematic = true;
             gravity.force = Vector3.zero;
         }
         lastPosition = transform.position;
         
-
-        //if (gameManagerScript.getGameState())
-        //{
-        //    ballTrackerActive = gameManagerScript.getGameState();
-        //}
 
         if (ballTrackerActive)
         {
@@ -80,7 +77,7 @@ public class SpherePhysics : MonoBehaviour {
         //Testing
         if (Input.GetKeyDown(KeyCode.S))
         {
-            transform.position = new Vector3(-7.6f, 10.0f, 6.6f);
+            transform.position = new Vector3(-9.0f, 10.0f, 6.6f);
             sphere.velocity = Vector3.zero;
         }
 
@@ -113,8 +110,8 @@ public class SpherePhysics : MonoBehaviour {
             }
 
             //This resets every time the player hits the ball.
-            //It might be possible to get a rimless dunk, if the ball bounces off
-            //one hoop, and into another.
+            //It might be possible to get 10 points for a swish, if the ball bounces off
+            //one hoop, and swishes into another.
             if (touchedRim)
             {
                 touchedRim = false;

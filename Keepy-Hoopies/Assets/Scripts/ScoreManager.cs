@@ -4,7 +4,9 @@ using TMPro;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour {
-    private float score, highScore, previousHighScore;
+    private float score, highScore, swishBest, hoopBest, hoopsScored, swishesScored;
+    private GoogleLeaderboards leaderboards;
+    private GoogleAchievements achievements;
     private UiManager uiManager;
 
     public GameObject pointsText;
@@ -12,13 +14,18 @@ public class ScoreManager : MonoBehaviour {
     private List<GameObject> pointsTexts;
 
     // Use this for initialization
-    void Start () {
-
+    void Start ()
+    {
+        achievements = GetComponent<GoogleAchievements>();
+        leaderboards = GetComponent<GoogleLeaderboards>();
         pointsTexts = new List<GameObject>();
         uiManager = GetComponent<UiManager>();
         highScore = PlayerPersistence.GetHighScore();
+        hoopBest = PlayerPersistence.GetHoopHighScore();
+        swishBest = PlayerPersistence.GetSwishHighScore();
+        swishesScored = 0;
+        hoopsScored = 0;
         uiManager.updateHighScoreText(highScore);
-        previousHighScore = 1.5f;
         score = 0f;
 	}
 	
@@ -33,6 +40,15 @@ public class ScoreManager : MonoBehaviour {
                 text.transform.position = text.transform.position + new Vector3(0f, 1f, 0f) * 5f * Time.deltaTime;
             }
         }
+        if (hoopsScored == 2)
+        {
+            achievements.UnlockDoubleHoop();
+        }
+
+        if (swishesScored == 2)
+        {
+            achievements.UnlockDoubleSwish();
+        }
     }
 
     public void addToScore(float toAdd)
@@ -42,9 +58,25 @@ public class ScoreManager : MonoBehaviour {
         StartCoroutine(pointsTextMovement(pointsValue));
     }
 
+    public void scoreHoop()
+    {
+        achievements.UnlockHoop();
+        addToScore(5f);
+        hoopsScored++;
+    }
+
+    public void scoreSwish()
+    {
+        achievements.UnlockSwish();
+        addToScore(10f);
+        swishesScored++;
+    }
+
     public void resetScore()
     {
         score = 0;
+        swishesScored = 0;
+        hoopsScored = 0;
     }
 
     public float getScore()
@@ -54,15 +86,35 @@ public class ScoreManager : MonoBehaviour {
 
     public void gameOverScoreManagement()
     {
+        leaderboards.updateHighScoreLeaderboard((long)score);
+        leaderboards.updateSwishHighScoreLeaderboard((long)swishesScored);
+        leaderboards.updateHoopHighScoreLeaderboard((long)hoopsScored);
         bool isHighScore = false;
+        bool isSwishBest = false;
+        bool isHoopBest = false;
         Debug.Log(score + " " + highScore);
+        achievements.CheckScoreAchievements(score);
         if (score > highScore)
         {
             isHighScore = true;
+            uiManager.updateHighScoreText(score);
             PlayerPersistence.SetHighScore(score);
         }
+        if (swishesScored > swishBest)
+        {
+            isSwishBest = true;
+            PlayerPersistence.SetSwishHighScore(swishesScored);
+        }
+        if (hoopsScored > hoopBest)
+        {
+            isHoopBest = true;
+            PlayerPersistence.SetHoopHighScore(hoopsScored);
+        }
+
         uiManager.OpenGameLostPanel();
         uiManager.displayFinalScore(score, isHighScore);
+        uiManager.displaySwishFinalScore(swishesScored, isSwishBest);
+        uiManager.displayHoopFinalScore(hoopsScored, isHoopBest);
     }
 
     public void SpawnPointsText(string value)

@@ -18,6 +18,8 @@ public class UiManager : MonoBehaviour
 
     public TextMeshProUGUI highScoreAchieved;
     public TextMeshProUGUI gameOverScoreText;
+
+    public TextMeshProUGUI swishesText, hoopsText, swishNewBest, hoopNewBest;
     //public TextMeshProUGUI scoreText;
     public TextMeshPro scoreText;
     //public TextMeshProUGUI highScoreText;
@@ -33,6 +35,7 @@ public class UiManager : MonoBehaviour
     private int currentColour;
 
     const string HighScoreMessage = "New High Score!";
+    const string NewBestMessage = "NEW BEST";
     // Start is called before the first frame update
     void Start()
     {
@@ -173,6 +176,32 @@ public class UiManager : MonoBehaviour
             highScoreAchieved.text = "";
         }
         //scoreText.text = "Score: " + score;
+    }
+
+    public void displaySwishFinalScore(float score, bool displayHighScoreText)
+    {
+        swishesText.text = "Swishes: " + score.ToString();
+        if (displayHighScoreText)
+        {
+            swishNewBest.text = NewBestMessage;
+        }
+        else
+        {
+            swishNewBest.text = "";
+        }
+    }
+
+    public void displayHoopFinalScore(float score, bool displayHighScoreText)
+    {
+        hoopsText.text = "Hoops: " + score;
+        if (displayHighScoreText)
+        {
+            hoopNewBest.text = NewBestMessage;
+        }
+        else
+        {
+            hoopNewBest.text = "";
+        }
     }
 
     public void updateScoreText(float score)
