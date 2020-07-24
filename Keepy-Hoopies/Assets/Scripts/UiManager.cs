@@ -14,7 +14,7 @@ public class UiManager : MonoBehaviour
 
     private GameManagerScript gameManager;
 
-    public Toggle musicToggle, soundToggle;
+    public Toggle musicToggle, soundToggle, swapControls;
 
     public TextMeshProUGUI highScoreAchieved;
     public TextMeshProUGUI gameOverScoreText;
@@ -34,6 +34,11 @@ public class UiManager : MonoBehaviour
 
     private int currentColour;
 
+    public Canvas leftStickCanvas;
+    public Canvas rightStickCanvas;
+    public Button leftJumpButton;
+    public Button rightJumpButton;
+
     const string HighScoreMessage = "New High Score!";
     const string NewBestMessage = "NEW BEST";
     // Start is called before the first frame update
@@ -47,6 +52,10 @@ public class UiManager : MonoBehaviour
         {
             toggleSound();
         });
+        swapControls.onValueChanged.AddListener(delegate
+        {
+            toggleFlipControl();
+        });
         resume.onClick.AddListener(unpause);
         retry.onClick.AddListener(retryGame);
         pauseButton.onClick.AddListener(togglePause);
@@ -57,12 +66,34 @@ public class UiManager : MonoBehaviour
 
         soundToggle.isOn = PlayerPersistence.GetSoundStatus() == 1 ? true : false;
         musicToggle.isOn = PlayerPersistence.GetMusicStatus() == 1 ? true : false;
+        swapControls.isOn = PlayerPersistence.GetFlipControlStatus() == 1 ? true : false;
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+        if (
+                PlayerPrefs.GetInt("swapControls") == 0 
+                && (!leftStickCanvas.gameObject.activeSelf || !rightJumpButton.gameObject.activeSelf)
+            )
+        {
+            leftStickCanvas.gameObject.SetActive(true);
+            rightJumpButton.gameObject.SetActive(true);
+            rightStickCanvas.gameObject.SetActive(false);
+            leftJumpButton.gameObject.SetActive(false);
+        }
+        else if (
+                PlayerPrefs.GetInt("swapControls") == 1
+                && (!rightStickCanvas.gameObject.activeSelf || !leftJumpButton.gameObject.activeSelf)
+            )
+        {
+            leftStickCanvas.gameObject.SetActive(false);
+            rightJumpButton.gameObject.SetActive(false);
+            rightStickCanvas.gameObject.SetActive(true);
+            leftJumpButton.gameObject.SetActive(true);
+        }
     }
 
     //0 = gray
@@ -113,6 +144,18 @@ public class UiManager : MonoBehaviour
         else
         {
             PlayerPersistence.SetSoundToggle(false);
+        }
+    }
+
+    public void toggleFlipControl()
+    {
+        if (swapControls.isOn)
+        {
+            PlayerPersistence.FlipControlsToggle(true);
+        }
+        else
+        {
+            PlayerPersistence.FlipControlsToggle(false);
         }
     }
 

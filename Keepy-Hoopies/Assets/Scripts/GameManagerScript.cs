@@ -17,6 +17,8 @@ public class GameManagerScript : MonoBehaviour {
     public SpherePhysics spherePhysics;
     private CountdownTimer countdownTimer;
 
+
+
     private bool musicOn, soundsOn;
 
     private float maxNumberOfDrops;
@@ -39,6 +41,11 @@ public class GameManagerScript : MonoBehaviour {
         if (!PlayerPrefs.HasKey("sound"))
         {
             PlayerPrefs.SetInt("sound", 1);
+        }
+
+        if (!PlayerPrefs.HasKey("swapControls"))
+        {
+            PlayerPrefs.SetInt("swapControls", 1);
         }
 
         gameLost = false;

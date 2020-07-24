@@ -25,6 +25,16 @@ public static class PlayerPersistence {
         PlayerPrefs.SetInt("sound", status);
     }
 
+    public static void FlipControlsToggle(bool state)
+    {
+        int status = 0;
+        if (state)
+        {
+            status = 1;
+        }
+        PlayerPrefs.SetInt("swapControls", status);
+    }
+
     public static int GetMusicStatus()
     {
         return PlayerPrefs.GetInt("music");
@@ -33,6 +43,11 @@ public static class PlayerPersistence {
     public static int GetSoundStatus()
     {
         return PlayerPrefs.GetInt("sound");
+    }
+
+    public static int GetFlipControlStatus()
+    {
+        return PlayerPrefs.GetInt("swapControls");
     }
 
     public static void SetHighScore(float score)

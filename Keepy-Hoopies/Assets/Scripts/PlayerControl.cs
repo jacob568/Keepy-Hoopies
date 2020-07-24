@@ -21,16 +21,18 @@ public class PlayerControl : MonoBehaviour {
     private Vector3 newLocation;
     private Vector3 previousLocation;
 
-    public Button jumpButton;
+    public Button jumpButton, leftJumpButton;
 
     //Mobile
     public LeftJoystick leftJoystick; // the game object containing the LeftJoystick script
-    private Vector3 joystickIdlePosition;
-    public Transform joystickHandle;
-    private Vector3 leftJoystickInput; // holds the input of the Left Joystick
-    float xMovementLeftJoystick; // The horizontal movement from joystick 01
-    float zMovementLeftJoystick; // The vertical movement from joystick 01
-    public Transform centreJoystick;
+    public Transform leftJoystickHandle;
+    public Transform leftCentreJoystick;
+
+    public LeftJoystick rightJoystick; // the game object containing the LeftJoystick script
+    public Transform rightJoystickHandle;
+    public Transform rightCentreJoystick;
+
+    private Vector3 activeJoystickInput;
 
     // Use this for initialization
     void Start () {
@@ -41,6 +43,7 @@ public class PlayerControl : MonoBehaviour {
         isJumping = false;
         audioSource.clip = jumpSound;
         jumpButton.onClick.AddListener(jump);
+        leftJumpButton.onClick.AddListener(jump);
     }
 
 
@@ -65,13 +68,21 @@ public class PlayerControl : MonoBehaviour {
             jump();
         }       **/
         //#elif UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_IPHONE
+        activeJoystickInput = Vector3.zero;
 
-        leftJoystickInput = leftJoystick.GetInputDirection();
-        moveDirection = new Vector3(leftJoystickInput.x, 0f, leftJoystickInput.y);
-        xMovementLeftJoystick = leftJoystickInput.x; // The horizontal movement from joystick 01
-        zMovementLeftJoystick = leftJoystickInput.y; // The vertical movement from joystick 01	
+        if (PlayerPrefs.GetInt("swapControls") == 0)
+        {
+            activeJoystickInput = leftJoystick.GetInputDirection();
+            moveDirection = new Vector3(activeJoystickInput.x, 0f, activeJoystickInput.y);
+            direction = (leftJoystickHandle.localPosition - leftCentreJoystick.localPosition);
+        }
+        else if (PlayerPrefs.GetInt("swapControls") == 1)
+        {
+            activeJoystickInput = rightJoystick.GetInputDirection();
+            moveDirection = new Vector3(activeJoystickInput.x, 0f, activeJoystickInput.y);
+            direction = (rightJoystickHandle.localPosition - rightCentreJoystick.localPosition);
+        }
 
-        direction = (joystickHandle.localPosition - centreJoystick.localPosition);
         magnitude = direction.magnitude / 8f;
         directionNormalized = direction.normalized;
         directionNormalized.z = directionNormalized.y;
@@ -79,7 +90,7 @@ public class PlayerControl : MonoBehaviour {
 
 
         // if there is touch input
-        if (leftJoystickInput != Vector3.zero)
+        if (activeJoystickInput != Vector3.zero)
         {
             // player is rotated to direction of movement
             Quaternion rotation = Quaternion.LookRotation(moveDirection, Vector3.up) * Quaternion.Euler(0f, 90f, 0f);
@@ -92,14 +103,14 @@ public class PlayerControl : MonoBehaviour {
 
             //COllision detection. Prevents walking through walls/planes, which is possible with
             //BoxColliders
-            if (!Physics.Raycast(transform.position, leftJoystickInput, 1.3f, layerMask)
+            if (!Physics.Raycast(transform.position, activeJoystickInput, 1.3f, layerMask)
                 && !Physics.Raycast(transform.position, leftPosition, 1.3f, layerMask)
                 && !Physics.Raycast(transform.position, rightPosition, 1.3f, layerMask))
             {
                 transform.Translate(directionNormalized * magnitude * movementSpeed * Time.deltaTime, Space.World);
             }
         }
-//#endif
+        //#endif
     }
 
     // Method which handles player jumping
