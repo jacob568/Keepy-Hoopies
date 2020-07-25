@@ -92,7 +92,6 @@ public class ScoreManager : MonoBehaviour {
         bool isHighScore = false;
         bool isSwishBest = false;
         bool isHoopBest = false;
-        Debug.Log(score + " " + highScore);
         achievements.CheckScoreAchievements(score);
         if (score > highScore)
         {

@@ -20,6 +20,7 @@ public class Floor : MonoBehaviour {
             if (ball.getBallDrops() > 0)
             {
                 ball.ballDropped();
+                gameManagerScript.resetPlayerLocation();
                 ball.centreBall();
                 if (PlayerPersistence.GetSoundStatus() == 1)
                 {

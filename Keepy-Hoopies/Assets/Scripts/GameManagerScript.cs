@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour {
+    public AdDisplay ads;
     //public GameObject skinScreen;
     private SceneController sceneController;
     private UiManager uiManager;
@@ -17,7 +18,8 @@ public class GameManagerScript : MonoBehaviour {
     public SpherePhysics spherePhysics;
     private CountdownTimer countdownTimer;
 
-
+    private int gamesForAds = 3;
+    private int gamesPlayed = 0;
 
     private bool musicOn, soundsOn;
 
@@ -119,6 +121,18 @@ public class GameManagerScript : MonoBehaviour {
     /// </summary>
     public void lostGame()
     {
+        if (scoreManager.getScore() > 25)
+        {
+            gamesPlayed++;
+        }
+        if (gamesPlayed >= gamesForAds)
+        {
+            bool result = ads.ShowInterstitialAd();
+            if (result)
+            {
+                gamesPlayed = 0;
+            }
+        }
         gameReady = false;
         gameStarted = false;
         gameLost = true;
@@ -130,6 +144,7 @@ public class GameManagerScript : MonoBehaviour {
     /// </summary>
     public void startGame()
     {
+        gamesPlayed++;
         gameStarted = true;
         spherePhysics.enableGravity();
     }
@@ -151,5 +166,10 @@ public class GameManagerScript : MonoBehaviour {
             uiManager.togglePause();
             paused = !paused;
         }
+    }
+
+    public void resetPlayerLocation()
+    {
+        playerControl.resetLocation();
     }
 }

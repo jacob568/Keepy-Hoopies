@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour {
     private Vector3 touchOrigin = -Vector3.one;
-    private float movementSpeed = 4f;
+    private float movementSpeed = 5.2f;
     private Rigidbody playerRigidbody;
     public float jumpForce;
     private bool isJumping;

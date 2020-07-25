@@ -219,7 +219,7 @@ public class SpherePhysics : MonoBehaviour {
 
     IEnumerator gravityTimer()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         trail.enabled = true;
         toggleGravity();
     }
