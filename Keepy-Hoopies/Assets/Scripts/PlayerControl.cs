@@ -32,10 +32,21 @@ public class PlayerControl : MonoBehaviour {
     public Transform rightJoystickHandle;
     public Transform rightCentreJoystick;
 
-    private Vector3 activeJoystickInput;
+    public Button leftPanelButton;
+    public Button rightPanelButton;
+    private RectTransform leftJoystickRect;
+    private RectTransform rightJoystickRect;
 
+    private Vector3 activeJoystickInput;
+    public MoveJoystickToTouchLocation leftTouchLocation;
+    public MoveJoystickToTouchLocation rightTouchLocation;
+    private bool isSet;
     // Use this for initialization
     void Start () {
+        isSet = true;
+        leftJoystickRect = leftJoystick.gameObject.GetComponent<RectTransform>();
+        rightJoystickRect = rightJoystick.gameObject.GetComponent<RectTransform>();
+        //panelButton.onClick.AddListener(MoveJoystickToTouchPosition);
         newLocation = transform.position;
         previousLocation = Vector3.zero;
         audioSource = GetComponent<AudioSource>();
@@ -44,6 +55,31 @@ public class PlayerControl : MonoBehaviour {
         audioSource.clip = jumpSound;
         jumpButton.onClick.AddListener(jump);
         leftJumpButton.onClick.AddListener(jump);
+    }
+
+    private void FixedUpdate()
+    {
+        if (leftTouchLocation.GetIsHeld() && !isSet)
+        {
+            leftJoystick.transform.position = MoveJoystickToTouchPosition(leftJoystickRect);
+            isSet = true;
+        }
+
+        if (!leftTouchLocation.GetIsHeld() && isSet)
+        {
+            isSet = false;
+        }
+
+        if (rightTouchLocation.GetIsHeld() && !isSet)
+        {
+            rightJoystick.transform.position = MoveJoystickToTouchPosition(rightJoystickRect);
+            isSet = true;
+        }
+
+        if (!rightTouchLocation.GetIsHeld() && isSet)
+        {
+            isSet = false;
+        }
     }
 
 
@@ -126,6 +162,13 @@ public class PlayerControl : MonoBehaviour {
                 audioSource.Play();
             }
         }
+    }
+
+    public Vector3 MoveJoystickToTouchPosition(RectTransform joystickRect)
+    {
+        Vector3 clickLocation = Input.mousePosition;
+        clickLocation = new Vector3(clickLocation.x + ((joystickRect.rect.width * joystickRect.transform.localScale.x) / 2), (clickLocation.y - ((joystickRect.rect.height * joystickRect.transform.localScale.y) / 2)), 0f);
+        return clickLocation;
     }
 
     private void OnCollisionEnter(Collision collision)
