@@ -7,11 +7,16 @@ using UnityEngine.UI;
 
 public class TitleManager : MonoBehaviour
 {
-    public Button playButton, leaderboardButton, achievementsButton;
+    public Button playButton, leaderboardButton, achievementsButton, helpButton, closeHelpMenu;
     public TextMeshProUGUI scoreText;
+    public GameObject helpPanel;
     // Start is called before the first frame update
     void Start()
     {
+        Screen.orientation = ScreenOrientation.Landscape;
+        Screen.SetResolution((int)Screen.width, (int)Screen.height, true);
+        helpButton.onClick.AddListener(OpenHelpPanel);
+        closeHelpMenu.onClick.AddListener(CloseHelpPanel);
         playButton.onClick.AddListener(StartGame);
         achievementsButton.onClick.AddListener(OpenAchievementsPanel);
         leaderboardButton.onClick.AddListener(OpenLeaderboardPanel);
@@ -38,4 +43,16 @@ public class TitleManager : MonoBehaviour
     {
         Social.ShowLeaderboardUI();
     }
+
+    private void OpenHelpPanel()
+    {
+        helpPanel.SetActive(true);
+    }
+
+    private void CloseHelpPanel()
+    {
+        helpPanel.SetActive(false);
+    }
+
+
 }

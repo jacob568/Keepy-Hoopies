@@ -167,8 +167,8 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.rocketnoob.keepyhoopies
   buildNumber: {}
-  AndroidBundleVersionCode: 1
-  AndroidMinSdkVersion: 19
+  AndroidBundleVersionCode: 3
+  AndroidMinSdkVersion: 29
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 

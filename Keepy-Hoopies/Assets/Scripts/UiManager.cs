@@ -100,7 +100,7 @@ public class UiManager : MonoBehaviour
     //1 = red
     public void ChangeCrossColour(int colour)
     {
-        Image crossImage = cross.GetComponent<Image>();
+        SpriteRenderer crossImage = cross.GetComponent<SpriteRenderer>();
         if (colour == 1)
         {
             currentColour = 1;

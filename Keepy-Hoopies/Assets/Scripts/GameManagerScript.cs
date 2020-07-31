@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour {
     public AdDisplay ads;
-    //public GameObject skinScreen;
     private SceneController sceneController;
     private UiManager uiManager;
     public PlayerControl playerControl;
@@ -25,8 +24,11 @@ public class GameManagerScript : MonoBehaviour {
 
     private float maxNumberOfDrops;
 
+    private bool adFailedToLoad;
+
     // Use this for initialization
     void Start() {
+        adFailedToLoad = false;
         uiManager = GetComponent<UiManager>();
         scoreManager = GetComponent<ScoreManager>();
         Screen.orientation = ScreenOrientation.Landscape;
@@ -78,13 +80,6 @@ public class GameManagerScript : MonoBehaviour {
         }
     }
 
-    public void quitGame()
-    {
-        gameStarted = false;
-
-        restartGame();
-    }
-
 
     /// <summary>
     /// Resets everything in the game for another run
@@ -117,22 +112,25 @@ public class GameManagerScript : MonoBehaviour {
         return gameLost;
     }
     /// <summary>
-    /// Sets the variables for when the game has been lost
+    /// Finshes up the game and checks if an ad should be run
     /// </summary>
     public void lostGame()
     {
-        if (scoreManager.getScore() > 25)
-        {
-            gamesPlayed++;
-        }
-        if (gamesPlayed >= gamesForAds)
+        if (ads.GetReady() || adFailedToLoad) 
         {
             bool result = ads.ShowInterstitialAd();
-            if (result)
+            //If the ad fails to load, it will run an ad after the next game,
+            //despite where the timer is.
+            if (!result)
             {
-                gamesPlayed = 0;
+                adFailedToLoad = true;
+            }
+            else
+            {
+                adFailedToLoad = false;
             }
         }
+        
         gameReady = false;
         gameStarted = false;
         gameLost = true;
@@ -144,6 +142,10 @@ public class GameManagerScript : MonoBehaviour {
     /// </summary>
     public void startGame()
     {
+        if (!ads.IsTimerRunning())
+        {
+            ads.StartCountdownTimer();
+        }
         gamesPlayed++;
         gameStarted = true;
         spherePhysics.enableGravity();

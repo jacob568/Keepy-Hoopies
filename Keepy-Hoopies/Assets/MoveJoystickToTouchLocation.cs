@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MoveJoystickToTouchLocation : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     private LeftJoystick leftJoystick;
+    public Transform handle;
     private Button panelButton;
     private bool isHeld;
     // Start is called before the first frame update
@@ -25,6 +26,14 @@ public class MoveJoystickToTouchLocation : MonoBehaviour, IPointerDownHandler, I
     public void OnPointerUp(PointerEventData eventData)
     {
         isHeld = false;
+    }
+
+    private void OnMouseDrag()
+    {
+        if (isHeld)
+        {
+            handle.position = Input.mousePosition;
+        }
     }
 
     public bool GetIsHeld()
