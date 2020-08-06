@@ -28,7 +28,7 @@ public class UiManager : MonoBehaviour
     //Pause buttons
     public Button resume, quit, pauseButton, restartButton;
     //Game over buttons
-    public Button retry, returnToMenu;
+    public Button retry, returnToMenu, pauseReturnToMain;
     //Main menu buttons
     public Button startGameButton;
 
@@ -61,6 +61,7 @@ public class UiManager : MonoBehaviour
         pauseButton.onClick.AddListener(togglePause);
         restartButton.onClick.AddListener(restart);
         returnToMenu.onClick.AddListener(returnToMain);
+        pauseReturnToMain.onClick.AddListener(returnToMain);
         //quit.onClick.AddListener(quitGame);
         //startGameButton.onClick.AddListener(loadGame);
 
