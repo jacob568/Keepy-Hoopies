@@ -18,9 +18,6 @@ public class PlayerControl : MonoBehaviour {
     private Vector3 directionNormalized;
     private float magnitude;
 
-    private Vector3 newLocation;
-    private Vector3 previousLocation;
-
     public Button jumpButton, leftJumpButton;
 
     //Mobile
@@ -32,19 +29,14 @@ public class PlayerControl : MonoBehaviour {
     public Transform rightJoystickHandle;
     public Transform rightCentreJoystick;
 
-    public Button leftPanelButton;
-    public Button rightPanelButton;
-
     private Vector3 activeJoystickInput;
     private bool isSet;
-
-    private Vector3 initialClickLocation;
+    private LayerMask layerMask;
+    private Vector3 moveDirection;
     // Use this for initialization
     void Start () {
+        layerMask = LayerMask.GetMask("Wall");
         isSet = true;
-        //panelButton.onClick.AddListener(MoveJoystickToTouchPosition);
-        newLocation = transform.position;
-        previousLocation = Vector3.zero;
         audioSource = GetComponent<AudioSource>();
         playerRigidbody = GetComponent<Rigidbody>();
         isJumping = false;
@@ -53,38 +45,11 @@ public class PlayerControl : MonoBehaviour {
         leftJumpButton.onClick.AddListener(jump);
     }
 
-    private void FixedUpdate()
-    {
-        //if (leftTouchLocation.GetIsHeld() && !isSet)
-        //{
-        //    leftJoystick.transform.position = MoveJoystickToTouchPosition(leftJoystickRect);
-        //    isSet = true;
-        //}
-
-        //if (!leftTouchLocation.GetIsHeld() && isSet)
-        //{
-        //    isSet = false;
-        //}
-
-        //if (rightTouchLocation.GetIsHeld() && !isSet)
-        //{
-        //    rightJoystick.transform.position = MoveJoystickToTouchPosition(rightJoystickRect);
-        //    isSet = true;
-        //}
-
-        //if (!rightTouchLocation.GetIsHeld() && isSet)
-        //{
-        //    isSet = false;
-        //}
-    }
-
 
     // Update is called once per frame
     void Update ()
     {
-        LayerMask layerMask = LayerMask.GetMask("Wall");
-        previousLocation = transform.position;
-        Vector3 moveDirection = Vector3.zero;
+        moveDirection = Vector3.zero;
         /**
 #if UNITY_STANDALONE || UNITY_WEBPLAYER
         moveHorizontal = Input.GetAxis("Horizontal");
@@ -126,7 +91,6 @@ public class PlayerControl : MonoBehaviour {
         {
             // player is rotated to direction of movement
             Quaternion rotation = Quaternion.LookRotation(moveDirection, Vector3.up) * Quaternion.Euler(0f, 90f, 0f);
-            Quaternion extraRotation = Quaternion.Euler(30f, 0, 30f);
             transform.rotation = rotation;
             // these are used to check in a cone in front of the player.
             // this helps prevent clipping through walls.
@@ -160,13 +124,6 @@ public class PlayerControl : MonoBehaviour {
         }
     }
 
-    //public Vector3 MoveJoystickToTouchPosition(RectTransform joystickRect)
-    //{
-    //    Vector3 clickLocation = Input.mousePosition;
-    //    clickLocation = new Vector3(clickLocation.x + ((joystickRect.rect.width * joystickRect.transform.localScale.x) / 2), (clickLocation.y - ((joystickRect.rect.height * joystickRect.transform.localScale.y) / 2)), 0f);
-    //    return clickLocation;
-    //}
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name == "Floor")
@@ -180,5 +137,6 @@ public class PlayerControl : MonoBehaviour {
     public void resetLocation()
     {
         transform.position = new Vector3(0f, 1.7f, 0f);
+        playerRigidbody.velocity = Vector3.zero;
     }
 }

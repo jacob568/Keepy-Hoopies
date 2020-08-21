@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Floor : MonoBehaviour {
     public GameManagerScript gameManagerScript;
+    public UiManager uiManager;
     private AudioSource audioSource;
     public AudioClip loseLifeSound;
     public AudioClip gameOver;
+    private bool extraRound;
 	// Use this for initialization
 	void Start () {
         audioSource = GetComponent<AudioSource>();
@@ -14,7 +16,7 @@ public class Floor : MonoBehaviour {
 
     private void OnCollisionEnter(Collision collision)
     {
-        SpherePhysics ball = collision.gameObject.GetComponent<SpherePhysics>();
+        BallController ball = collision.gameObject.GetComponent<BallController>();
         if (ball)
         {
             if (ball.getBallDrops() > 0)
@@ -27,7 +29,18 @@ public class Floor : MonoBehaviour {
                     audioSource.clip = loseLifeSound;
                     audioSource.Play();
                 }
-            } else
+            }
+            else if (gameManagerScript.GetOfferAdState())
+            {
+                gameManagerScript.RewardedAdPanelDisplayed();
+                if (PlayerPersistence.GetSoundStatus() == 1)
+                {
+                    audioSource.clip = loseLifeSound;
+                    audioSource.Play();
+                }
+                StartCoroutine(uiManager.OpenRewardedAdPanel());
+            }
+            else
             {
                 gameManagerScript.lostGame();
                 if (PlayerPersistence.GetSoundStatus() == 1) {

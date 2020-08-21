@@ -61,6 +61,7 @@ public class ScoreManager : MonoBehaviour {
     public void scoreHoop()
     {
         achievements.UnlockHoop();
+        StartCoroutine(uiManager.HoopScored(0));
         addToScore(5f);
         hoopsScored++;
     }
@@ -68,6 +69,7 @@ public class ScoreManager : MonoBehaviour {
     public void scoreSwish()
     {
         achievements.UnlockSwish();
+        StartCoroutine(uiManager.HoopScored(1));
         addToScore(10f);
         swishesScored++;
     }
@@ -131,6 +133,11 @@ public class ScoreManager : MonoBehaviour {
         yield return new WaitForSeconds(.7f);
         pointsTexts.Remove(newPointsText);
         Destroy(newPointsText);
+    }
+
+    public float GetHighScore()
+    {
+        return highScore;
     }
 
 }

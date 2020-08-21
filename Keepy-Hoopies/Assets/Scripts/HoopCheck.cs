@@ -6,24 +6,25 @@ public class HoopCheck : MonoBehaviour {
     public GameObject gameManager;
     private ScoreManager scoreManager;
     public GameObject sphere;
-    private SpherePhysics spherePhysics;
+    private BallController spherePhysics;
     public  AudioSource audioSource;
     public AudioClip nonSwishSound;
     public AudioClip swishSound;
+    public ParticleSystem confetti;
     private bool isColliding = false;
 
 	// Use this for initialization
 	void Start () {
         audioSource = GetComponent<AudioSource>();
         scoreManager = gameManager.GetComponent<ScoreManager>();
-        spherePhysics = sphere.GetComponent<SpherePhysics>();
+        spherePhysics = sphere.GetComponent<BallController>();
 	}
 	
 	// Update is called once per frame
 
     private void OnTriggerEnter(Collider hoopTrigger)
     {
-        ColliderControl ballCollider = hoopTrigger.gameObject.GetComponent<ColliderControl>();
+        BallGoalColliderControl ballCollider = hoopTrigger.gameObject.GetComponent<BallGoalColliderControl>();
         if (ballCollider)
         {
             // Ensures points are only given if the ball goes through the top of the hoop
@@ -40,6 +41,7 @@ public class HoopCheck : MonoBehaviour {
                         audioSource.Play();
                     }
                     scoreManager.scoreSwish();
+                    confetti.Play();
                     wait(.5f);
                 }
                 // if hoop was touched
@@ -52,6 +54,7 @@ public class HoopCheck : MonoBehaviour {
                         audioSource.Play();
                     }
                     scoreManager.scoreHoop();
+                    confetti.Play();
                     spherePhysics.SetTouchedRim(false);
                     wait(.5f);
                 }

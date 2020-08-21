@@ -15,8 +15,9 @@ public class TitleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Screen.orientation = ScreenOrientation.Landscape;
-        Screen.SetResolution((int)Screen.width, (int)Screen.height, true);
+        Screen.autorotateToPortrait = false;
+        Screen.orientation = ScreenOrientation.AutoRotation;
+        Screen.SetResolution(Screen.width, Screen.height, true);
         helpButton.onClick.AddListener(OpenHelpPanel);
         closeHelpMenu.onClick.AddListener(CloseHelpPanel);
         playButton.onClick.AddListener(StartGame);
@@ -42,19 +43,13 @@ public class TitleManager : MonoBehaviour
         swapControls.isOn = PlayerPersistence.GetFlipControlStatus() == 1 ? true : false;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void ToggleSettingsPanel()
     {
         if (settings.GetIsOpen())
         {
             settings.ClosePanel();
         }
-        else
+        else if (!settings.GetIsOpen())
         {
             settings.OpenPanel();
         }

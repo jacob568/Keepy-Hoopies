@@ -6,35 +6,40 @@ using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour {
     public AdDisplay ads;
-    private SceneController sceneController;
+    public RewardedAdDisplay rewardedAds;
     private UiManager uiManager;
     public PlayerControl playerControl;
     private ScoreManager scoreManager;
     private bool gameStarted;
-    private bool gameLost;
+    public bool gameLost;
     private bool gameReady;
     public bool paused;
-    public SpherePhysics spherePhysics;
+    public BallController spherePhysics;
     private CountdownTimer countdownTimer;
 
-    private int gamesForAds = 3;
-    private int gamesPlayed = 0;
+    private bool extraRound;
 
     private bool musicOn, soundsOn;
 
     private float maxNumberOfDrops;
 
     private bool adFailedToLoad;
+    private int gamesPlayed = 0;
+    private int adDelay = 0;
+    private int gamesForRewardedAd = 4;
+    private bool rewardedAdDelay;
 
     // Use this for initialization
     void Start() {
+        extraRound = false;
         adFailedToLoad = false;
         uiManager = GetComponent<UiManager>();
         scoreManager = GetComponent<ScoreManager>();
-        Screen.orientation = ScreenOrientation.Landscape;
-        Screen.SetResolution((int)Screen.width, (int)Screen.height, true);
+        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+        Screen.autorotateToPortrait = false;
+        Screen.orientation = ScreenOrientation.AutoRotation;
+        Screen.SetResolution(Screen.width, Screen.height, true);
         countdownTimer = GetComponent<CountdownTimer>();
-        sceneController = new SceneController();
         spherePhysics.toggleGravity();
 
         if (!PlayerPrefs.HasKey("music"))
@@ -55,15 +60,10 @@ public class GameManagerScript : MonoBehaviour {
         gameLost = false;
         gameReady = true;
         gameStarted = false;
-
     }
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            PlayerPersistence.SetHighScore(0);
-        }
         //Checks which colour the cross needs to be
         if (spherePhysics.getBallDrops() == 0 && uiManager.getCrossColour() == 0)
         {
@@ -95,6 +95,43 @@ public class GameManagerScript : MonoBehaviour {
         uiManager.CloseGameLostPanel();
         gameStarted = false;
         gameReady = true;
+    }
+
+    public bool GetOfferAdState()
+    {
+        if (!extraRound && rewardedAds.IsAdReady())
+        {
+            return true;
+        }
+
+        return false;
+
+        //if (adDelay > 0)
+        //{
+        //    adDelay--;
+        //}
+
+        //float highScore = scoreManager.GetHighScore();
+        //float scoreForRewardedAd = Mathf.Floor(highScore * 0.6f);
+        //float score = scoreManager.getScore();
+
+        //if (score >= scoreForRewardedAd && adDelay == 0)
+        //{
+        //    adDelay = 2;
+        //    return true;
+        //}
+        //else if (gamesPlayed >= gamesForRewardedAd)
+        //{
+        //    adDelay = 2;
+        //    return true;
+        //}
+
+        //return false;
+    }
+
+    public void SetExtraRound()
+    {
+        extraRound = true;
     }
 
     /// <returns>True if the game is paused</returns>
@@ -130,11 +167,23 @@ public class GameManagerScript : MonoBehaviour {
                 adFailedToLoad = false;
             }
         }
-        
+
+        extraRound = false;
         gameReady = false;
         gameStarted = false;
         gameLost = true;
         scoreManager.gameOverScoreManagement();
+    }
+
+    public void RewardedAdPanelDisplayed()
+    {
+        gameLost = true;
+        gameStarted = false;
+    }
+
+    public void ResetPlayedGames()
+    {
+        gamesPlayed = 0;
     }
 
     /// <summary>
@@ -146,7 +195,13 @@ public class GameManagerScript : MonoBehaviour {
         {
             ads.StartCountdownTimer();
         }
+        gameStarted = true;
         gamesPlayed++;
+        spherePhysics.enableGravity();
+    }
+
+    public void StartRewardedAdRound()
+    {
         gameStarted = true;
         spherePhysics.enableGravity();
     }
@@ -158,7 +213,7 @@ public class GameManagerScript : MonoBehaviour {
 
     public bool getGameReadyState()
     {
-        return gameReady;
+        return gameReady; 
     }
 
     private void togglePause()

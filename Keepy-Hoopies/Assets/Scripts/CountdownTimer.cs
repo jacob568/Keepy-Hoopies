@@ -6,9 +6,11 @@ using TMPro;
 public class CountdownTimer : MonoBehaviour {
 
     public TextMeshProUGUI countdownText;
+    public TipPanelControl[] tipPanels;
     private GameManagerScript gameManager;
     private bool countdownRunning;
     private IEnumerator co;
+    private bool rewardedAdRound;
 
 	// Use this for initialization
 	void Start () {
@@ -16,6 +18,7 @@ public class CountdownTimer : MonoBehaviour {
         co = countdown();
         countdownRunning = false;
         countdownText.text = "Ready?";
+        rewardedAdRound = false;
     }
 	
 	// Update is called once per frame
@@ -27,6 +30,13 @@ public class CountdownTimer : MonoBehaviour {
                 && !gameManager.getGameState()
             )
         {
+            foreach (TipPanelControl tipPanel in tipPanels)
+            {
+                if (tipPanel.isActiveAndEnabled)
+                {
+                    tipPanel.FadeText();
+                }
+            }
             countdownRunning = true;
             co = countdown();
             StartCoroutine(co);
@@ -43,7 +53,15 @@ public class CountdownTimer : MonoBehaviour {
         yield return new WaitForSeconds(1f);
         countdownText.text = "GO!";
         countdownRunning = false;
-        gameManager.startGame();
+        if (rewardedAdRound)
+        {
+            gameManager.StartRewardedAdRound();
+            rewardedAdRound = false;
+        }
+        else
+        { 
+            gameManager.startGame();
+        }
         yield return new WaitForSeconds(1f);
         countdownText.text = "";
     }
@@ -55,5 +73,10 @@ public class CountdownTimer : MonoBehaviour {
         }
         countdownRunning = false;
         countdownText.text = "Ready?";
+    }
+
+    public void IsRewardedAdRound()
+    {
+        rewardedAdRound = true;
     }
 }
