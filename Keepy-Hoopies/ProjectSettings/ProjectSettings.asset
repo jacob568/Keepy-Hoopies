@@ -121,7 +121,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleVersion: 0.3
+  bundleVersion: 0.4
   preloadedAssets: []
   metroInputSource: 0
   wsaTransparentSwapchain: 0
@@ -167,8 +167,8 @@ PlayerSettings:
   applicationIdentifier:
     Android: com.rocketnoob.keepyhoopies
   buildNumber: {}
-  AndroidBundleVersionCode: 6
-  AndroidMinSdkVersion: 28
+  AndroidBundleVersionCode: 7
+  AndroidMinSdkVersion: 23
   AndroidTargetSdkVersion: 0
   AndroidPreferredInstallLocation: 1
   aotOptions: 

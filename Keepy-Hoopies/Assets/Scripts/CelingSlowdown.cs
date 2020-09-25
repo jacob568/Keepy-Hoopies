@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CelingSlowdown : MonoBehaviour {
-
+    private Rigidbody rigidbody;
+    private Vector3 newVelocity;
     private void OnTriggerStay(Collider other)
     {
-        Rigidbody rigidbody = other.gameObject.GetComponent<Rigidbody>();
-        Vector3 newVelocity = rigidbody.velocity;
+        rigidbody = other.gameObject.GetComponentInParent<Rigidbody>();
+        newVelocity = rigidbody.velocity;
         if (rigidbody.velocity.y > 0)
         {
             newVelocity.y -= .1f;

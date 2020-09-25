@@ -9,9 +9,9 @@ public class PlayerControl : MonoBehaviour {
     private Rigidbody playerRigidbody;
     public float jumpForce;
     private bool isJumping;
-    private bool isGrounded;
-    private float moveHorizontal;
-    private float moveVertical;
+    //private bool isGrounded;
+    //private float moveHorizontal;
+    //private float moveVertical;
     public AudioClip jumpSound;
     private AudioSource audioSource;
     private Vector3 direction;
@@ -99,8 +99,7 @@ public class PlayerControl : MonoBehaviour {
 
             //COllision detection. Prevents walking through walls/planes, which is possible with
             //BoxColliders
-            if (!Physics.Raycast(transform.position, activeJoystickInput, 1.3f, layerMask)
-                && !Physics.Raycast(transform.position, leftPosition, 1.3f, layerMask)
+            if (!Physics.Raycast(transform.position, leftPosition, 1.3f, layerMask)
                 && !Physics.Raycast(transform.position, rightPosition, 1.3f, layerMask))
             {
                 transform.Translate(directionNormalized * magnitude * movementSpeed * Time.deltaTime, Space.World);
@@ -115,7 +114,7 @@ public class PlayerControl : MonoBehaviour {
         if (!isJumping)
         {
             isJumping = true;
-            isGrounded = false;
+            //isGrounded = false;
             playerRigidbody.AddForce(new Vector3(0.0f, jumpForce, 0.0f), ForceMode.Impulse);
             if (PlayerPersistence.GetSoundStatus() == 1)
             {
@@ -128,7 +127,7 @@ public class PlayerControl : MonoBehaviour {
     {
         if (collision.gameObject.name == "Floor")
         {
-            isGrounded = true;
+            //isGrounded = true;
             isJumping = false;
         }
     }

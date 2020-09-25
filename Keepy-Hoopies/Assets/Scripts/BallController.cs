@@ -42,7 +42,7 @@ public class BallController : MonoBehaviour {
         scoreManager = gameManager.GetComponent<ScoreManager>();
         sphere = GetComponent<Rigidbody>();
         touchedRim = false;
-        centreLocation = new Vector3(0, 10f, 0);
+        centreLocation = new Vector3(0, 10f, -1.1f);
 	}
 	
 	// Update is called once per frame
@@ -165,7 +165,7 @@ public class BallController : MonoBehaviour {
     public void returnToStartPosition()
     {
         gameObject.SetActive(true);
-        transform.position = new Vector3(0f, 10f, 0f);
+        transform.position = centreLocation;
         sphere.velocity = new Vector3(0f, 0f, 0f);
         ballDrops = 1;
     }

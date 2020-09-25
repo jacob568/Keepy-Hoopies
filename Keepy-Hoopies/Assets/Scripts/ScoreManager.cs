@@ -4,12 +4,13 @@ using TMPro;
 using UnityEngine;
 
 public class ScoreManager : MonoBehaviour {
-    private float score, highScore, swishBest, hoopBest, hoopsScored, swishesScored;
+    private float score, previousScore, highScore, swishBest, hoopBest, hoopsScored, swishesScored;
     private GoogleLeaderboards leaderboards;
     private GoogleAchievements achievements;
     private UiManager uiManager;
 
-    public GameObject pointsText;
+    public GameObject pointsTextObject;
+    private GameObject newPointsText;
     public Transform sphere;
     private List<GameObject> pointsTexts;
 
@@ -26,12 +27,20 @@ public class ScoreManager : MonoBehaviour {
         swishesScored = 0;
         hoopsScored = 0;
         uiManager.updateHighScoreText(highScore);
+        previousScore = -1f;
         score = 0f;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-        uiManager.updateScoreText(score);
+        newPointsText = Object.Instantiate(pointsTextObject, Vector3.zero, Quaternion.identity);
+        newPointsText.transform.localScale = Vector3.zero;
+
+    }
+
+    // Update is called once per frame
+    void Update () {
+        if (score != previousScore)
+        {
+            uiManager.updateScoreText(score);
+            previousScore = score;
+        }
 
         if (pointsTexts.Count != 0)
         {
@@ -51,13 +60,19 @@ public class ScoreManager : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Increases the score by a given value and initiates the floating score text
+    /// </summary>
+    /// <param name="toAdd"></param>
     public void addToScore(float toAdd)
     {
         score += toAdd;
-        string pointsValue = "+" + toAdd.ToString();
-        StartCoroutine(pointsTextMovement(pointsValue));
+        StartCoroutine(pointsTextMovement("+" + toAdd.ToString()));
     }
 
+    /// <summary>
+    /// This manages when a hoop is scored by the player
+    /// </summary>
     public void scoreHoop()
     {
         achievements.UnlockHoop();
@@ -66,6 +81,9 @@ public class ScoreManager : MonoBehaviour {
         hoopsScored++;
     }
 
+    /// <summary>
+    /// This manages when a swish is scored by the player
+    /// </summary>
     public void scoreSwish()
     {
         achievements.UnlockSwish();
@@ -74,6 +92,9 @@ public class ScoreManager : MonoBehaviour {
         swishesScored++;
     }
 
+    /// <summary>
+    /// Resets the score for a new game.
+    /// </summary>
     public void resetScore()
     {
         score = 0;
@@ -81,11 +102,17 @@ public class ScoreManager : MonoBehaviour {
         hoopsScored = 0;
     }
 
+
+    /// <returns>The currentt score</returns>
     public float getScore()
     {
         return score;
     }
 
+    /// <summary>
+    /// This manages the scores when the game has ended. Updating leaderboards and checking achievements
+    /// and displaying the correct text on the game over screen.
+    /// </summary>
     public void gameOverScoreManagement()
     {
         leaderboards.updateHighScoreLeaderboard((long)score);
@@ -94,6 +121,7 @@ public class ScoreManager : MonoBehaviour {
         bool isHighScore = false;
         bool isSwishBest = false;
         bool isHoopBest = false;
+
         achievements.CheckScoreAchievements(score);
         if (score > highScore)
         {
@@ -118,23 +146,27 @@ public class ScoreManager : MonoBehaviour {
         uiManager.displayHoopFinalScore(hoopsScored, isHoopBest);
     }
 
-    public void SpawnPointsText(string value)
-    {
-        StartCoroutine(pointsTextMovement(value));
-    }
-
+    /// <summary>
+    /// Positions and displays the +{score} text when points are scored
+    /// </summary>
+    /// <param name="value">The number of points scored</param>
     IEnumerator pointsTextMovement(string value)
     {
         float xOffset = 10f;
         Vector3 newPos = new Vector3(sphere.position.x + xOffset, sphere.position.y, sphere.position.z);
-        GameObject newPointsText = Object.Instantiate(pointsText, newPos, Quaternion.identity);
+        newPointsText.transform.position = newPos;
+        newPointsText.transform.localScale = Vector3.one;
         pointsTexts.Add(newPointsText);
         newPointsText.GetComponent<TextMeshPro>().text = value;
         yield return new WaitForSeconds(.7f);
         pointsTexts.Remove(newPointsText);
-        Destroy(newPointsText);
+        newPointsText.transform.localScale = Vector3.zero;
     }
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns>The current high score</returns>
     public float GetHighScore()
     {
         return highScore;

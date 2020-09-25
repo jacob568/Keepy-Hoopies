@@ -49,9 +49,13 @@ public class UiManager : MonoBehaviour
 
     const string HighScoreMessage = "New High Score!";
     const string NewBestMessage = "NEW BEST";
+
+    private TipPanelControl leftTipPanel, rightTipPanel;
     // Start is called before the first frame update
     void Start()
     {
+        leftTipPanel = leftStickCanvas.gameObject.GetComponentInChildren<TipPanelControl>();
+        rightTipPanel = rightStickCanvas.gameObject.GetComponentInChildren<TipPanelControl>();
         rewardedAdEndScale = Vector3.one;
         startScale = Vector3.zero;
         endScale = new Vector3(3f, 3f, 3f);
@@ -86,44 +90,42 @@ public class UiManager : MonoBehaviour
     void Update()
     {
         if (
-                PlayerPrefs.GetInt("swapControls") == 0 
-                && (!leftStickCanvas.gameObject.activeSelf || !rightJumpButton.gameObject.activeSelf)
-            )
+            PlayerPrefs.GetInt("swapControls") == 0 
+            && (!leftStickCanvas.gameObject.activeSelf || !rightJumpButton.gameObject.activeSelf))
         {
             leftStickCanvas.gameObject.SetActive(true);
             rightJumpButton.gameObject.SetActive(true);
             rightStickCanvas.gameObject.SetActive(true);
             leftJumpButton.gameObject.SetActive(true);
-            if (rightStickCanvas.gameObject.GetComponentInChildren<TipPanelControl>().GetFaded())
+            if (rightTipPanel.GetFaded())
             {
                 if (leftStickCanvas.gameObject.activeSelf)
                 {
                     leftStickCanvas.gameObject.SetActive(true);
                 }
-                leftStickCanvas.gameObject.GetComponentInChildren<TipPanelControl>().HideText();
+                leftTipPanel.HideText();
             }
             rightStickCanvas.gameObject.SetActive(false);
             leftJumpButton.gameObject.SetActive(false);
         }
         else if (
-                PlayerPrefs.GetInt("swapControls") == 1
-                && (!rightStickCanvas.gameObject.activeSelf || !leftJumpButton.gameObject.activeSelf)
-                )
+             PlayerPrefs.GetInt("swapControls") == 1
+             && (!rightStickCanvas.gameObject.activeSelf || !leftJumpButton.gameObject.activeSelf))
         {
-            rightStickCanvas.gameObject.SetActive(true);
-            leftJumpButton.gameObject.SetActive(true);
-            leftStickCanvas.gameObject.SetActive(true);
-            rightJumpButton.gameObject.SetActive(true);
-            if (leftStickCanvas.gameObject.GetComponentInChildren<TipPanelControl>().GetFaded())
-            {
-                if (!rightStickCanvas.gameObject.activeSelf)
-                {
-                    rightStickCanvas.gameObject.SetActive(true);
-                }
-                rightStickCanvas.gameObject.GetComponentInChildren<TipPanelControl>().HideText();
-            }
-            leftStickCanvas.gameObject.SetActive(false);
-            rightJumpButton.gameObject.SetActive(false);
+             rightStickCanvas.gameObject.SetActive(true);
+             leftJumpButton.gameObject.SetActive(true);
+             leftStickCanvas.gameObject.SetActive(true);
+             rightJumpButton.gameObject.SetActive(true);
+             if (leftTipPanel.GetFaded())
+             {
+                 if (!rightStickCanvas.gameObject.activeSelf)
+                 {
+                     rightStickCanvas.gameObject.SetActive(true);
+                 }
+                 rightTipPanel.HideText();
+             }
+             leftStickCanvas.gameObject.SetActive(false);
+             rightJumpButton.gameObject.SetActive(false);
         }
     }
 

@@ -141,7 +141,7 @@ public class GameManagerScript : MonoBehaviour {
     }
 
     /// <summary>
-    /// 
+    /// Returns whether the game is lost or not.
     /// </summary>
     /// <returns>True if the game has been lost</returns>
     public bool getGameLostState()

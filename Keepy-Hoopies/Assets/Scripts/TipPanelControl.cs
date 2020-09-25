@@ -16,6 +16,7 @@ public class TipPanelControl : MonoBehaviour
 
     public void FadeText()
     {
+        faded = true;
         foreach (TextMeshProUGUI text in PanelTexts)
         {
             if (text.IsActive())
@@ -23,7 +24,6 @@ public class TipPanelControl : MonoBehaviour
                 text.CrossFadeAlpha(0.0f, 2.5f, false);
             }
         }
-        faded = true;
     }
 
     public void ShowText()

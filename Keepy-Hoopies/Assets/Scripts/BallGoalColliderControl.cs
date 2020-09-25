@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class BallGoalColliderControl : MonoBehaviour {
     public GameObject sphere;
+    private Vector3 colliderPosition;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
 		
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        Vector3 colliderPosition = sphere.transform.position;
+        colliderPosition = sphere.transform.position;
         colliderPosition.y += .4f;
         transform.position = colliderPosition;
-        
 	}
 }
