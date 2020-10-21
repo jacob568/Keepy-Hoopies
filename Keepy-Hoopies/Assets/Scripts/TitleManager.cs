@@ -12,6 +12,11 @@ public class TitleManager : MonoBehaviour
     public TitleSettingsPositioner settings;
     public TextMeshProUGUI scoreText;
     public GameObject helpPanel;
+
+    private void Awake()
+    {
+        Application.targetFrameRate = Screen.currentResolution.refreshRate;
+    }
     // Start is called before the first frame update
     void Start()
     {
@@ -58,6 +63,7 @@ public class TitleManager : MonoBehaviour
     private void StartGame()
     {
         SceneManager.LoadScene("GameScene");
+        SceneManager.UnloadSceneAsync(0);
     }
 
     private void OpenAchievementsPanel()

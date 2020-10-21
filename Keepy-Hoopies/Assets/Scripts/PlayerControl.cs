@@ -20,6 +20,9 @@ public class PlayerControl : MonoBehaviour {
 
     public Button jumpButton, leftJumpButton;
 
+    public Renderer playableArea;
+    private Vector3 corner1, corner2;
+
     //Mobile
     public LeftJoystick leftJoystick; // the game object containing the LeftJoystick script
     public Transform leftJoystickHandle;
@@ -43,6 +46,9 @@ public class PlayerControl : MonoBehaviour {
         audioSource.clip = jumpSound;
         jumpButton.onClick.AddListener(jump);
         leftJumpButton.onClick.AddListener(jump);
+        corner1 = playableArea.bounds.max;
+        corner2 = playableArea.bounds.min;
+        
     }
 
 
@@ -104,6 +110,10 @@ public class PlayerControl : MonoBehaviour {
             {
                 transform.Translate(directionNormalized * magnitude * movementSpeed * Time.deltaTime, Space.World);
             }
+
+            //if (transform.position.x < corner1.x - .5f && transform.position.x > corner2.x + .5f && transform.position.z < corner1.z - .5f && transform.position.z > corner2.z + .5f)
+            //{
+            //}
         }
         //#endif
     }
